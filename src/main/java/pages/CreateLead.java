@@ -6,18 +6,18 @@ import wrappers.LeafTapsWrappers;
 
 public class CreateLead extends LeafTapsWrappers {	
 	
-	@When("Enter Company Name (.*)")
+	@When("Enter Company Name(.*)")
 	public void enterCompanyName(String cname){
 		enterById("createLeadForm_companyName", cname);
 	}
 	
-	@When("Enter First Name (.*)")
+	@When("Enter First Name(.*)")
 	public void enterFirstName(String fname){
 		enterById("createLeadForm_firstName", fname);
 	}
 	
 
-	@When("Enter Last Name (.*)")
+	@When("Enter Last Name(.*)")
 	public void enterLastName(String lname){
 		enterById("createLeadForm_lastName", lname);
 	}
@@ -43,5 +43,5 @@ public class CreateLead extends LeafTapsWrappers {
 	public void enterPhone(String phone){
 		enterById("createLeadForm_primaryPhoneNumber", phone);
 	}
-	
+
 }

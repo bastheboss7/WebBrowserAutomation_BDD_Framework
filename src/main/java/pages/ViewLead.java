@@ -10,7 +10,7 @@ public class ViewLead extends LeafTapsWrappers {
 		clickByLink("Delete");
 	}
 	
-	@Then("Verify the First Name (.*)")
+	@Then("Verify the First Name(.*)")
 	public void verifyFname(String fname) {
 		verifyTextById("viewLead_firstName_sp", fname);
 	}
