@@ -21,7 +21,15 @@ import wrappers.LeafTapsWrappers;
 @RunWith(Cucumber.class)
 
 @CucumberOptions(features = {"src/main/java/features/CreateLead.feature"},
-        glue 	  = {"pages"})
+        glue 	  = {"pages"},
+        plugin = {
+        "summary",
+        "pretty" ,
+        "html:target/cucumber-reports/cucumber-pretty/",
+        "json:target/cucumber-reports/CucumberTestReport.json"
+//        "com.epam.reportportal.cucumber.ScenarioReporter"
+},
+        monochrome = true)
 
 public class TestNgRunner extends LeafTapsWrappers{
 
