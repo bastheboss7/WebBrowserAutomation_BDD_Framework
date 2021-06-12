@@ -1,6 +1,5 @@
 package runner;
 
-
 import io.cucumber.testng.CucumberOptions;
 import io.cucumber.testng.FeatureWrapper;
 import io.cucumber.testng.PickleWrapper;
@@ -10,24 +9,18 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-
 import cucumber.api.junit.Cucumber;
-//import cucumber.api.testng.CucumberFeatureWrapper;
-//import cucumber.api.testng.PickleEventWrapper;
-//import cucumber.api.testng.TestNGCucumberRunner;
 import wrappers.LeafTapsWrappers;
 
 @RunWith(Cucumber.class)
 
-@CucumberOptions(features = {"src/main/java/features/CreateLead.feature"},
-        glue 	  = {"pages"},
+@CucumberOptions(features = {"src/main/java/features"},
+                glue 	  = {"pages"},
         plugin = {
         "summary",
         "pretty" ,
         "html:target/cucumber-reports/cucumber-pretty/",
         "json:target/cucumber-reports/CucumberTestReport.json"
-//        "com.epam.reportportal.cucumber.ScenarioReporter"
 },
         monochrome = true)
 
@@ -40,10 +33,6 @@ public class TestNgRunner extends LeafTapsWrappers{
         testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
     }
 
-    /*@Test(dataProvider = "scenarios")
-    public void runFeature(PickleEventWrapper pickleWrapper, CucumberFeatureWrapper featureWrapper) throws Throwable {
-        testNGCucumberRunner.runScenario(pickleWrapper.getPickleEvent());
-    }*/
     @Test(groups = "cucumber", description = "Runs Cucumber Feature", dataProvider = "scenarios")
     public void scenario(PickleWrapper pickleWrapper, FeatureWrapper featureWrapper) throws Throwable {
         testNGCucumberRunner.runScenario(pickleWrapper.getPickle());
@@ -58,5 +47,4 @@ public class TestNgRunner extends LeafTapsWrappers{
     public void tearDownClass() throws Exception {
         testNGCucumberRunner.finish();
     }
-
 }

@@ -1,40 +1,16 @@
 package pages;
 
-//import io.cucumber.testng.PendingException;
-import io.cucumber.java.PendingException;
 import io.cucumber.java.en.*;
 import wrappers.LeafTapsWrappers;
 public class LoginPage extends LeafTapsWrappers {
-	
-	@When("Enter User Name (.*)")
-	public void enterUserName(String name){
-		enterById("username", name);
-	}
-	
-	@When("Enter Password (.*)")
-	public void enterPassword(String pwd){
-		enterById("password", pwd);
-	}
-	
-	@When("Click Login")
-	public void clickLogin(){
-		clickByClassName("decorativeSubmit");
-	}
-	
-	@Then("Verify the Welcome Message")
-	public void verifyWelcome() {
-		throw new PendingException();
-	}
 
-	@Then("Verify the Logout")
-	public void verifyLogout() {
-		throw new PendingException();
+	@When("I login to the portal")
+	public void loginWeb(){
+		reportStep("Login to portal", "INFO");
+		clickByXpath("//*[@class=\"header_user_info\"]/a");
+		enterByXpath("//*[@id=\"email\"]","bskr_5chennai@yahoo.co.in");
+		enterByXpath("//*[@id=\"passwd\"]","Box@1234");
+		clickByXpath("//*[@id=\"SubmitLogin\"]");
+		reportStep("Login completed", "INFO");
 	}
-	
-	@Then("Verify the Error Message")
-	public void verifyErrorMessage() {
-		throw new PendingException();
-	}
-
-
 }
