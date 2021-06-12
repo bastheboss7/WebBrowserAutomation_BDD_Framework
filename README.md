@@ -24,3 +24,20 @@ Cucumber reports can be found at, target/cucumber-reports/cucumber-html-reports
 Please note that, cucumber report can be generated thorugh command line run only.
 
 Both the reporting files have been uploaded to git for the reference.
+
+# Parallel Run
+
+On the file, src/main/java/runner/TestNgRunner.java:
+
+In the snippet below,
+
+@DataProvider(name = "scenarios",parallel=false)
+    public Object[][] features() {
+        return testNGCucumberRunner.provideScenarios();
+    }
+    
+Make 'parallel=true'to enable parallel run up to 10 browsers at a time.
+
+# Improvements:
+
+Android/iOS drivers can be added to enable the framework compatible with Mobile automation as well. 
