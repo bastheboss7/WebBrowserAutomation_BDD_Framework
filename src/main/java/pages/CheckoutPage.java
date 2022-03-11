@@ -48,4 +48,40 @@ public class CheckoutPage extends LeafTapsWrappers {
         orderNumber = getTextByXpath("//*[@id=\"center_column\"]/div").substring(146,155);
         reportStep("Order confirmation number is :"+orderNumber+"", "INFO");
     }
-}
+
+    @When("I see search results in the table")
+    public void resultAssert(){
+        reportStep("Verify search result is shown in the table", "INFO");
+        isDisplayed("//tr[@class='MuiTableRow-root MuiTableRow-hover']");
+    }
+
+    @When("I add a record under singular(.*)")
+    public void singularRecord(String value){
+        reportStep("Adding a record under singular tab", "INFO");
+        clickByXpath("//*[@id=\"data-input-add-icon-id\"]");
+        enterByXpath("//*[@id=\"value\"]",value);
+        clickByXpath("//span[text()='Submit']");
+    }
+
+    @When("I confirm the record updated with the value(.*)")
+    public void assertRecord(String value){
+        reportStep("Asserting the record got updated", "INFO");
+        isDisplayed("//td[text()='"+value+"']");
+    }
+
+    @When("I click delete record of singular value(.*)")
+    public void singularRecordDeletion(String value){
+        reportStep("Deleting the record", "INFO");
+        clickByXpath("(//td[@class='MuiTableCell-root MuiTableCell-body']/div)[2]");
+        clickByXpath("(//table[@class='MuiTable-root MuiTable-stickyHeader'])[2]//td[text()='"+value+"']/../td[6]/*");
+        clickByXpath("//span[text()='Confirm']");
+    }
+
+    @When("I confirm the record deleted successfully(.*)")
+    public void singularRecordDeletionAsser(String value){
+        reportStep("Asserting the record got deleted", "INFO");
+        isNOTDisplayed("(//table[@class='MuiTable-root MuiTable-stickyHeader'])[2]//td[text()='"+value+"']");
+
+    }
+
+    }

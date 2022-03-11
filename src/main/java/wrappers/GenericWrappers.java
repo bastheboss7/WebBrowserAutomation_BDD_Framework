@@ -1,5 +1,16 @@
 package wrappers;
 
+import org.apache.commons.io.FileUtils;
+import org.junit.Assert;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.Select;
+import utils.Reporter;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,26 +20,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoAlertPresentException;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.UnhandledAlertException;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import com.relevantcodes.extentreports.ExtentTest;
-
-import utils.Reporter;
+import static org.junit.Assert.assertFalse;
 
 public class GenericWrappers extends Reporter implements Wrappers {
 
@@ -36,7 +28,9 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	protected static final ThreadLocal<GenericWrappers> driverThreadLocal = new ThreadLocal<GenericWrappers>();
 	public RemoteWebDriver driver;
 	protected Properties prop;
-	public String sUrl,primaryWindowHandle,sHubUrl,sHubPort;
+	public String sUrl;
+	public String sHubUrl;
+	public String sHubPort;
 
 	public void setDriver(GenericWrappers wrappers) {
 		driverThreadLocal.set(wrappers);
@@ -204,7 +198,23 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		} catch (NoSuchElementException e) {
 			reportStep("The data: "+data+" could not be entered in the field :"+xpathValue, "FAIL");
 		} catch (Exception e) {
+			e.printStackTrace();
 			reportStep("Unknown exception occured while entering "+data+" in the field :"+xpathValue, "FAIL");
+		}
+
+	}
+
+	public void enterByCssJS(String cssValue, String data) {
+		try {
+			WebElement element = getDriver().findElement(By.cssSelector(cssValue));
+			((JavascriptExecutor)getDriver()).executeScript("arguments[0].innerText = '"+data+"'", element);
+			reportStep("The data: "+data+" entered successfully in field :"+cssValue, "PASS");
+
+		} catch (NoSuchElementException e) {
+			reportStep("The data: "+data+" could not be entered in the field :"+cssValue, "FAIL");
+		} catch (Exception e) {
+			e.printStackTrace();
+			reportStep("Unknown exception occured while entering "+data+" in the field :"+cssValue, "FAIL");
 		}
 
 	}
@@ -341,11 +351,11 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		}
 	}
 
-	/**
+	 /*
 	 * This method will click the element using id as locator
 	 * @param id  The id (locator) of the element to be clicked
 	 * @author Baskar
-	 */
+	 **/
 	public void clickByClassName(String classVal) {
 		try{
 			getDriver().findElement(By.className(classVal)).click();
@@ -434,7 +444,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	}
 
 
-	 /** This method will mouse over on the element using link name as locator
+	 /* This method will mouse over on the element using link name as locator
 	 * @param xpathVal  The link name (locator) of the element to be moused over
 	 * @author Baskar*/
 
@@ -462,7 +472,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		return bReturn; 
 	}
 
-	/**
+	/*
 	 * This method will return the text of the element using id as locator
 	 * @param xpathVal  The id (locator) of the element
 	 * @author Baskar
@@ -486,7 +496,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	 */
 	public void selectVisibileTextById(String id, String value) {
 		try{
-			new Select(getDriver().findElement(By.id(id))).selectByVisibleText(value);;
+			new Select(getDriver().findElement(By.id(id))).selectByVisibleText(value);
 			reportStep("The element with id: "+id+" is selected with value :"+value, "PASS");
 		} catch (Exception e) {
 			reportStep("The value: "+value+" could not be selected.", "FAIL");
@@ -497,7 +507,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	public void selectVisibileTextByXPath(String xpath, String value) {
 		try{
-			new Select(getDriver().findElement(By.xpath(xpath))).selectByVisibleText(value);;
+			new Select(getDriver().findElement(By.xpath(xpath))).selectByVisibleText(value);
 			reportStep("The element with xpath: "+xpath+" is selected with value :"+value, "PASS");
 		} catch (Exception e) {
 			reportStep("The value: "+value+" could not be selected.", "FAIL");
@@ -506,7 +516,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	public void selectIndexById(String id, String value) {
 		try{
-			new Select(getDriver().findElement(By.id(id))).selectByIndex(Integer.parseInt(value));;
+			new Select(getDriver().findElement(By.id(id))).selectByIndex(Integer.parseInt(value));
 			reportStep("The element with id: "+id+" is selected with index :"+value, "PASS");
 		} catch (Exception e) {
 			reportStep("The index: "+value+" could not be selected.", "FAIL");
@@ -547,7 +557,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	}
 
-
 	public String getAlertText() {		
 		String text = null;
 		try {
@@ -557,7 +566,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		} catch (Exception e) {
 			reportStep("The alert could not be accepted.", "FAIL");
 		}
-		return text;
+		return null;
 
 	}
 
@@ -584,7 +593,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			reportStep("The browser has been closed.", "FAIL");
+//			reportStep("The browser has been closed.", "FAIL");
 		} catch (IOException e) {
 			reportStep("The snapshot could not be taken", "WARN");
 		}
@@ -596,6 +605,28 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			Thread.sleep(milliseconds);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void isDisplayed(String xpath) {
+		try {
+			Assert.assertTrue(getDriver().findElementByXPath(xpath).isDisplayed());
+			reportStep("The element with xpath: "+xpath+" is displayed.", "PASS");
+		} catch (Exception e) {
+			e.printStackTrace();
+			reportStep("The element with xpath: "+xpath+" is NOT displayed.", "FAIL");
+		}
+	}
+
+	public void isNOTDisplayed(String xpath) {
+		try {
+			assertFalse(getDriver().findElementByXPath(xpath).isDisplayed());
+			reportStep("The element with xpath: "+xpath+" is displayed.", "FAIL");
+		} catch (NoSuchElementException e) {
+			reportStep("The element with xpath: "+xpath+" is NOT displayed.", "PASS");
+		} catch (Exception e) {
+			e.printStackTrace();
+			reportStep("Unknown error occured", "FAIL");
 		}
 	}
 
