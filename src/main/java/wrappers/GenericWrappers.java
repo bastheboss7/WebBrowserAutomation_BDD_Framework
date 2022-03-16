@@ -13,7 +13,6 @@ import utils.Reporter;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
@@ -25,7 +24,7 @@ import static org.junit.Assert.assertFalse;
 public class GenericWrappers extends Reporter implements Wrappers {
 
 
-	protected static final ThreadLocal<GenericWrappers> driverThreadLocal = new ThreadLocal<GenericWrappers>();
+	protected static final ThreadLocal<GenericWrappers> driverThreadLocal = new ThreadLocal<>();
 	public RemoteWebDriver driver;
 	protected Properties prop;
 	public String sUrl;
@@ -43,12 +42,10 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	public GenericWrappers() {
 		Properties prop = new Properties();
 		try {
-			prop.load(new FileInputStream(new File("./src/main/resources/config.properties")));
+			prop.load(new FileInputStream("./src/main/resources/config.properties"));
 			sHubUrl = prop.getProperty("HUB");
 			sHubPort = prop.getProperty("PORT");
 			sUrl = prop.getProperty("URL");
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -57,10 +54,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	public void loadObjects() {
 		prop = new Properties();
 		try {
-			prop.load(new FileInputStream(new File("src/main/resources/object.properties")));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			prop.load(new FileInputStream("src/main/resources/object.properties"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -503,8 +497,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		}
 	}
 
-
-
 	public void selectVisibileTextByXPath(String xpath, String value) {
 		try{
 			new Select(getDriver().findElement(By.xpath(xpath))).selectByVisibleText(value);
@@ -587,25 +579,10 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			FileUtils.copyFile(getDriver().getScreenshotAs(OutputType.FILE) , new File("./reports/images/"+number+".jpg"));
 		} catch (WebDriverException e) {
 			e.printStackTrace();
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-//			reportStep("The browser has been closed.", "FAIL");
 		} catch (IOException e) {
 			reportStep("The snapshot could not be taken", "WARN");
 		}
 		return number;
-	}
-
-	public void sleep(long milliseconds) {
-		try {
-			Thread.sleep(milliseconds);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void isDisplayed(String xpath) {

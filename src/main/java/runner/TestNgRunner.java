@@ -14,7 +14,10 @@ import wrappers.LeafTapsWrappers;
 
 @RunWith(Cucumber.class)
 
-@CucumberOptions(features = {"src/main/java/features"},
+@CucumberOptions(
+//        tags can be used while debugging/need basis
+        tags = ("@debug"),
+        features = {"src/main/java/features/IntelliSense.feature"},
                 glue 	  = {"pages"},
         plugin = {
         "summary",

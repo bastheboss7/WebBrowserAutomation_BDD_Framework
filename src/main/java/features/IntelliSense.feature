@@ -11,7 +11,7 @@ Feature: Brains App for Intellisense
       |Feb 14, 2022 12:35 PM GMT|
     Then I see search results in the table
 
-#  @debug
+  @debug
   Scenario: Intellisense dashboard - Adding a singular record
 
     When I login to intellisense web
@@ -25,7 +25,7 @@ Feature: Brains App for Intellisense
     Then I confirm the record updated with the value
     |100|
 
-  @debug
+#  @debug
   Scenario: Intellisense dashboard - Deleting a singular record
 
     When I login to intellisense web
