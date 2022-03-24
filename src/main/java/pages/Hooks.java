@@ -9,7 +9,7 @@ public class Hooks extends LeafTapsWrappers{
 	
 	@Before
 	public void launchBrowser(Scenario sc) throws InterruptedException {
-		invokeApp("chrome");		
+		invokeApp(sBrowser);
 		startTestCase(sc.getName(), sc.getId());
 	}
 	

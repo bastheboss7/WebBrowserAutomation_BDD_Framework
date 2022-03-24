@@ -1,15 +1,18 @@
 @Baskar #Author
 Feature: Brains App for Intellisense
 
-  @smoke
+#  @smoke
   Scenario: Intellisense dashboard - Assert search table
 
     When I login to intellisense web
     And I set 'From' date as
       |Nov 2, 2020 11:35 AM GMT|
-    And I set 'To' date as
-      |Feb 14, 2022 12:35 PM GMT|
-    Then I see search results in the table
+#    And I set 'To' date as
+#      |Feb 14, 2022 12:35 PM GMT|
+#    Then I see search results in the table
+
+
+
 
   @debug
   Scenario: Intellisense dashboard - Adding a singular record
@@ -43,12 +46,12 @@ Feature: Brains App for Intellisense
   Scenario: Intellisense dashboard - Maximize the table and assert it
 
     When I login to intellisense web
-    And I set 'From' date as
-      |Nov 2, 2020 11:35 AM GMT|
-    And I set 'To' date as
-      |Feb 14, 2022 12:35 PM GMT|
-
-    When I click 'Maximize' table
-    Then I click 'Close' to minimize the table
+#    And I set 'From' date as
+#      |Nov 2, 2020 11:35 AM GMT|
+#    And I set 'To' date as
+#      |Feb 14, 2022 12:35 PM GMT|
+#
+#    When I click 'Maximize' table
+#    Then I click 'Close' to minimize the table
 
 

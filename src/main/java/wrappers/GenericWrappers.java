@@ -1,14 +1,16 @@
 package wrappers;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
+//import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.Assert;
 import utils.Reporter;
 
 import java.io.File;
@@ -19,17 +21,18 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.Assert.assertFalse;
+//import static org.junit.Assert.assertFalse;
 
 public class GenericWrappers extends Reporter implements Wrappers {
 
 
 	protected static final ThreadLocal<GenericWrappers> driverThreadLocal = new ThreadLocal<>();
 	public RemoteWebDriver driver;
-	protected Properties prop;
+	public static Properties prop;
 	public String sUrl;
 	public String sHubUrl;
 	public String sHubPort;
+	public static String sBrowser;
 
 	public void setDriver(GenericWrappers wrappers) {
 		driverThreadLocal.set(wrappers);
@@ -46,6 +49,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			sHubUrl = prop.getProperty("HUB");
 			sHubPort = prop.getProperty("PORT");
 			sUrl = prop.getProperty("URL");
+			sBrowser = prop.getProperty("Browser");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -98,9 +102,12 @@ public class GenericWrappers extends Reporter implements Wrappers {
 				if(browser.equalsIgnoreCase("chrome")){
 					System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver");
 					driver = new ChromeDriver();
-				}else{
+				}else if (browser.equalsIgnoreCase("mozilla")){
 					System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
 					driver = new FirefoxDriver();
+				}else if(browser.equalsIgnoreCase("safari")){
+//				System.setProperty("webdriver.gecko.driver", "./drivers/geckodriver.exe");
+				driver = new SafariDriver();
 				}
 			}
 			GenericWrappers gw = new GenericWrappers();
@@ -198,6 +205,20 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	}
 
+	public void enterByEle(WebElement ele, String data) {
+		try {
+			ele.sendKeys(data);
+			reportStep("The data: "+data+" entered successfully in ele :"+ele, "PASS");
+
+		} catch (NoSuchElementException e) {
+			reportStep("The data: "+data+" could not be entered in the ele :"+ele, "FAIL");
+		} catch (Exception e) {
+			e.printStackTrace();
+			reportStep("Unknown exception occured while entering "+data+" in the ele :"+ele, "FAIL");
+		}
+
+	}
+
 	public void enterByCssJS(String cssValue, String data) {
 		try {
 			WebElement element = getDriver().findElement(By.cssSelector(cssValue));
@@ -209,6 +230,21 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		} catch (Exception e) {
 			e.printStackTrace();
 			reportStep("Unknown exception occured while entering "+data+" in the field :"+cssValue, "FAIL");
+		}
+
+	}
+
+	public void enterByCssJsEle(WebElement ele, String data) {
+		try {
+			((JavascriptExecutor)getDriver()).executeScript("arguments[0].innerText = '"+data+"'", ele);
+			reportStep("The data: "+data+" entered successfully in element :"+ele, "PASS");
+
+		} catch (NoSuchElementException e) {
+			reportStep("The data: "+data+" could not be entered in element :"+ele, "FAIL");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			reportStep("Unknown exception occured while entering "+data+" in element :"+ele, "FAIL");
 		}
 
 	}
@@ -592,18 +628,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		} catch (Exception e) {
 			e.printStackTrace();
 			reportStep("The element with xpath: "+xpath+" is NOT displayed.", "FAIL");
-		}
-	}
-
-	public void isNOTDisplayed(String xpath) {
-		try {
-			assertFalse(getDriver().findElementByXPath(xpath).isDisplayed());
-			reportStep("The element with xpath: "+xpath+" is displayed.", "FAIL");
-		} catch (NoSuchElementException e) {
-			reportStep("The element with xpath: "+xpath+" is NOT displayed.", "PASS");
-		} catch (Exception e) {
-			e.printStackTrace();
-			reportStep("Unknown error occured", "FAIL");
 		}
 	}
 

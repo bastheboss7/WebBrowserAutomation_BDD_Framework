@@ -1,26 +1,46 @@
 package pages;
 
 import io.cucumber.java.en.When;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 import wrappers.LeafTapsWrappers;
 
 public class MyHomePage extends LeafTapsWrappers {
 
+	public MyHomePage() {
+		PageFactory.initElements(getDriver(), this);
+	}
+
+	@FindBy(css = "span.date-range")
+	public WebElement fromDateBox;
+
+	@FindBy(css = "span.date-range:nth-child(3)")
+	private WebElement toDateBox;
+
+	@FindBy(xpath = "//i[@class='fa fa-expand']")
+	private WebElement maximizeTable;
+
+	@FindBy(xpath = "//button[@type=\"button\"]/span/h6/../..")
+	public WebElement submitBtn1;
+
+
 	@When("I set 'From' date as(.*)")
-	public void setFromDate(String fromDate){
+	public void setFromDate(String fDate){
 		reportStep("Setting 'From' date", "INFO");
-		enterByCssJS("span.date-range",fromDate);
+		enterByCssJsEle(fromDateBox,fDate);
 	}
 
 	@When("I set 'To' date as(.*)")
 	public void setToDate(String toDate){
 		reportStep("Setting 'To' date", "INFO");
-		enterByCssJS("span.date-range:nth-child(3)",toDate);
+		enterByCssJsEle(toDateBox,toDate);
 	}
 
 	@When("I click 'Maximize' table")
 	public void maxSize(){
 		reportStep("Maximizing table window", "INFO");
-		clickByXpath("//i[@class='fa fa-expand']");
+		clickByEle(maximizeTable);
 		isDisplayed("//i[@class='fa fa-close close-full-screen']");
 	}
 
