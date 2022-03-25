@@ -16,14 +16,14 @@ import wrappers.LeafTapsWrappers;
 
 @CucumberOptions(
 //        tags can be used while debugging/need basis
-        tags = ("@smoke"),
+//        tags = ("@smoke"),
         features = {"src/main/java/features/IntelliSense.feature"},
                 glue 	  = {"pages"},
         plugin = {
         "summary",
         "pretty" ,
-        "html:target/cucumber-reports/cucumber-pretty/",
-        "json:target/cucumber-reports/CucumberTestReport.json"
+        "html:target/reports/cucumber-report/cucumber-pretty/",
+        "json:target/reports/cucumber-report/CucumberTestReport.json"
 },
         monochrome = true)
 

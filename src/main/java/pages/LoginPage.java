@@ -30,8 +30,8 @@ public class LoginPage extends LeafTapsWrappers {
 		enterByEle(emailBox, prop.getProperty("LoginPage.UserName.Data"));
 		enterByEle(passwordBox, prop.getProperty("LoginPage.Password.Data"));
 		clickByEle(submitBtn);
+		Assert.assertTrue(myHomePage.fromDateBox.isDisplayed());
 		reportStep("Login completed", "INFO");
-		Assert.assertTrue(myHomePage.submitBtn1.isDisplayed(),"Assertion failed");
 
 	}
 }

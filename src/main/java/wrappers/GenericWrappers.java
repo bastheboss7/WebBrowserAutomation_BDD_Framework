@@ -1,16 +1,12 @@
 package wrappers;
 
 import org.apache.commons.io.FileUtils;
-//import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.support.ui.Select;
-import org.testng.Assert;
 import utils.Reporter;
 
 import java.io.File;
@@ -18,10 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
-//import static org.junit.Assert.assertFalse;
 
 public class GenericWrappers extends Reporter implements Wrappers {
 
@@ -86,7 +79,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	 * This method will launch the browser in grid node (if remote) and maximise the browser and set the
 	 * wait for 30 seconds and load the url
 	 * @author Baskar
-	 * @return
+	 *
 	 **/
 	public synchronized RemoteWebDriver invokeApp(String browser, boolean bRemote) {
 		try {
@@ -130,80 +123,11 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	/**
 	 * This method will enter the value to the text field using id attribute to locate
-	 * 
-	 * @param idValue - id of the webelement
 	 * @param data - The data to be sent to the webelement
 	 * @author Baskar
-	 * @throws IOException 
-	 
+	 *
 	 */
 	//
-	public void enterById(String idValue, String data) {
-		try {
-			getDriver().findElement(By.id(idValue)).clear();
-			getDriver().findElement(By.id(idValue)).sendKeys(data);	
-			reportStep("The data: "+data+" entered successfully in field :"+idValue, "PASS");
-		} catch (NoSuchElementException e) {
-			reportStep("The data: "+data+" could not be entered in the field :"+idValue, "FAIL");
-			throw new RuntimeException();
-		}
-		catch (WebDriverException e) {
-			e.printStackTrace();
-			reportStep("Unknown exception occured while entering "+data+" in the field :"+idValue, "FAIL");
-		}
-		catch (Exception e) {
-			reportStep("Unknown exception occured while entering "+data+" in the field :"+idValue, "FAIL");
-		}
-	}
-
-	/**
-	 * This method will enter the value to the text field using name attribute to locate
-	 * 
-	 * @param nameValue - name of the webelement
-	 * @param data - The data to be sent to the webelement
-	 * @author Baskar
-	 * @throws IOException 
-	 
-	 */
-
-	//Enter the values using Name Locator
-	public void enterByName(String nameValue, String data) {
-		try {
-			getDriver().findElement(By.name(nameValue)).clear();
-			getDriver().findElement(By.name(nameValue)).sendKeys(data);	
-			reportStep("The data: "+data+" entered successfully in field :"+nameValue, "PASS");
-
-		} catch (NoSuchElementException e) {
-			reportStep("The data: "+data+" could not be entered in the field :"+nameValue, "FAIL");
-		} catch (Exception e) {
-			reportStep("Unknown exception occured while entering "+data+" in the field :"+nameValue, "FAIL");
-		}
-
-	}
-
-	/**
-	 * This method will enter the value to the text field using name attribute to locate
-	 * 
-	 * @param xpathValue - xpathValue of the webelement
-	 * @param data - The data to be sent to the webelement
-	 * @author Baskar
-	 * @throws IOException 
-	 
-	 */
-	public void enterByXpath(String xpathValue, String data) {
-		try {
-			getDriver().findElement(By.xpath(xpathValue)).clear();
-			getDriver().findElement(By.xpath(xpathValue)).sendKeys(data);	
-			reportStep("The data: "+data+" entered successfully in field :"+xpathValue, "PASS");
-
-		} catch (NoSuchElementException e) {
-			reportStep("The data: "+data+" could not be entered in the field :"+xpathValue, "FAIL");
-		} catch (Exception e) {
-			e.printStackTrace();
-			reportStep("Unknown exception occured while entering "+data+" in the field :"+xpathValue, "FAIL");
-		}
-
-	}
 
 	public void enterByEle(WebElement ele, String data) {
 		try {
@@ -215,21 +139,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		} catch (Exception e) {
 			e.printStackTrace();
 			reportStep("Unknown exception occured while entering "+data+" in the ele :"+ele, "FAIL");
-		}
-
-	}
-
-	public void enterByCssJS(String cssValue, String data) {
-		try {
-			WebElement element = getDriver().findElement(By.cssSelector(cssValue));
-			((JavascriptExecutor)getDriver()).executeScript("arguments[0].innerText = '"+data+"'", element);
-			reportStep("The data: "+data+" entered successfully in field :"+cssValue, "PASS");
-
-		} catch (NoSuchElementException e) {
-			reportStep("The data: "+data+" could not be entered in the field :"+cssValue, "FAIL");
-		} catch (Exception e) {
-			e.printStackTrace();
-			reportStep("Unknown exception occured while entering "+data+" in the field :"+cssValue, "FAIL");
 		}
 
 	}
@@ -358,96 +267,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			reportStep("The browser:"+getDriver().getCapabilities().getBrowserName()+" could not be closed.", "FAIL");
 		}
 
-	}
-
-	/**
-	 * This method will click the element using id as locator
-	 * @param id  The id (locator) of the element to be clicked
-	 * @author Baskar
-	 */
-	public void clickById(String id) {
-		try{
-
-			getDriver().findElement(By.id(id)).click();
-			reportStep("The element with id: "+id+" is clicked.", "PASS");
-
-		}catch (NoSuchElementException e) {			
-			reportStep("The element with id: "+id+" could not be clicked.", "FAIL");
-			throw new RuntimeException();
-		}
-
-		catch (Exception e) {
-			reportStep("The element with id: "+id+" could not be clicked.", "FAIL");
-		}
-	}
-
-	 /*
-	 * This method will click the element using id as locator
-	 * @param id  The id (locator) of the element to be clicked
-	 * @author Baskar
-	 **/
-	public void clickByClassName(String classVal) {
-		try{
-			getDriver().findElement(By.className(classVal)).click();
-			reportStep("The button with class Name: "+classVal+" is clicked.", "PASS");
-		}catch (NoSuchElementException e){
-			reportStep("The button with class Name: "+classVal+" could not be found.", "FAIL");
-		}catch (Exception e) {
-			reportStep("The button with class Name: "+classVal+" could not be clicked.", "FAIL");
-		}
-	}
-	/**
-	 * This method will click the element using name as locator
-	 * @param name  The name (locator) of the element to be clicked
-	 * @author Baskar
-	 */
-	public void clickByName(String name) {
-		try{
-			getDriver().findElement(By.name(name)).click();
-			reportStep("The element with name: "+name+" is clicked.", "PASS");
-		} catch (Exception e) {
-			reportStep("The element with name: "+name+" could not be clicked.", "FAIL");
-		}
-	}
-
-	/**
-	 * This method will click the element using link name as locator
-	 * @param name  The link name (locator) of the element to be clicked
-	 * @author Baskar
-	 */
-	public void clickByLink(String name) {
-		//	getDriver().findElementByLinkText(name).click();
-		try{
-			getDriver().findElementByLinkText(name).click();
-			reportStep("The element with link name: "+name+" is clicked.", "PASS");
-		} catch (WebDriverException e) {
-			reportStep("The element with link name: "+name+" could not be clicked.", "FAIL");
-		}
-	}
-
-	public void clickByLinkNoSnap(String name) {
-		try{
-			getDriver().findElement(By.linkText(name)).click();
-			//reportStep("The element with link name: "+name+" is clicked.", "PASS");
-		} catch (Exception e) {
-			reportStep("The element with link name: "+name+" could not be clicked.", "FAIL");
-		}
-	}
-
-	/**
-	 * This method will click the element using xpath as locator
-	 * @param xpathVal  The xpath (locator) of the element to be clicked
-	 * @author Baskar
-	 */
-	public void clickByXpath(String xpathVal) {
-		try{
-
-			getDriver().findElement(By.xpath(xpathVal)).click();
-			reportStep("The element : "+xpathVal+" is clicked.", "PASS");
-		} catch (Exception e) {
-			e.printStackTrace();
-			reportStep("The element with xpath: "+xpathVal+" could not be clicked.", "FAIL");
-		}
 	}
 
 	public void clickByXpathNoSnap(String xpathVal) {
@@ -612,7 +431,7 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	public long takeSnap(){
 		long number = (long) Math.floor(Math.random() * 900000000L) + 10000000L; 
 		try {
-			FileUtils.copyFile(getDriver().getScreenshotAs(OutputType.FILE) , new File("./reports/images/"+number+".jpg"));
+			FileUtils.copyFile(getDriver().getScreenshotAs(OutputType.FILE) , new File("./target/reports/extent-report/images/"+number+".jpg"));
 		} catch (WebDriverException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -621,14 +440,8 @@ public class GenericWrappers extends Reporter implements Wrappers {
 		return number;
 	}
 
-	public void isDisplayed(String xpath) {
-		try {
-			Assert.assertTrue(getDriver().findElementByXPath(xpath).isDisplayed());
-			reportStep("The element with xpath: "+xpath+" is displayed.", "PASS");
-		} catch (Exception e) {
-			e.printStackTrace();
-			reportStep("The element with xpath: "+xpath+" is NOT displayed.", "FAIL");
-		}
+	public byte[] captureScreen(){
+		return ((TakesScreenshot) (getDriver())).getScreenshotAs(OutputType.BYTES);
 	}
 
 }

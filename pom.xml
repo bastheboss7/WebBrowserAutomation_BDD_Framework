@@ -32,6 +32,7 @@
 			<groupId>io.qameta.allure</groupId>
 			<artifactId>allure-testng</artifactId>
 			<version>${allure-testng-version}</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
@@ -101,9 +102,9 @@
 						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
 					</argLine>
 					<systemPropertyVariables>
-						<allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
-						<allure.link.issue.pattern>https://example.org/browse/{}</allure.link.issue.pattern>
-						<allure.link.tms.pattern>https://example.org/browse/{}</allure.link.tms.pattern>
+						<allure.results.directory>${project.build.directory}/reports/allure-report</allure.results.directory>
+						<!--<allure.link.issue.pattern>https://example.org/browse/{}</allure.link.issue.pattern>
+						<allure.link.tms.pattern>https://example.org/browse/{}</allure.link.tms.pattern>-->
 					</systemPropertyVariables>
 				</configuration>
 				<dependencies>
@@ -127,7 +128,7 @@
 						</goals>
 						<configuration>
 							<projectName>Scan And Go Mobile</projectName>
-							<outputDirectory>target/cucumber-reports</outputDirectory>
+							<outputDirectory>target/reports/cucumber-report</outputDirectory>
 							<jsonFiles>
 								<param>**/*.json</param>
 							</jsonFiles>
@@ -136,14 +137,14 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!--<plugin>
 				<groupId>io.qameta.allure</groupId>
 				<artifactId>allure-maven</artifactId>
 				<version>2.8</version>
 				<configuration>
 					<reportDirectory>${basedir}/allure-report</reportDirectory>
 				</configuration>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 </project>
