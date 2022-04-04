@@ -16,9 +16,9 @@
 		<common-io-version>2.11.0</common-io-version>
 		<cucumber-testng-version>7.2.3</cucumber-testng-version>
 		<cucumber-java-version>6.6.0</cucumber-java-version>
-		<maven-compiler-plugin-version>3.3</maven-compiler-plugin-version>
+		<maven-compiler-plugin-version>3.10.1</maven-compiler-plugin-version>
 		<maven-resource-plugin-version>3.0.2</maven-resource-plugin-version>
-		<maven-surefire-plugin-version>3.0.0-M4</maven-surefire-plugin-version>
+		<maven-surefire-plugin-version>3.0.0-M1</maven-surefire-plugin-version>
 		<maven-cucumber-report-version>5.4.0</maven-cucumber-report-version>
 	</properties>
 

@@ -16,7 +16,7 @@ import wrappers.LeafTapsWrappers;
 
 @CucumberOptions(
 //        tags can be used while debugging/need basis
-//        tags = ("@smoke"),
+        tags = ("@smoke"),
         features = {"src/main/java/features/IntelliSense.feature"},
                 glue 	  = {"pages"},
         plugin = {

@@ -4,9 +4,11 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.Select;
 import utils.Reporter;
 
 import java.io.File;
@@ -14,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class GenericWrappers extends Reporter implements Wrappers {
@@ -269,12 +272,12 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	}
 
-	public void clickByXpathNoSnap(String xpathVal) {
+	public void clickByEle(WebElement ele) {
 		try{
-			getDriver().findElement(By.xpath(xpathVal)).click();
-			reportStep("The element : "+xpathVal+" is clicked.", "INFO");
+			ele.click();
+			reportStep("The element : "+ele+" is clicked.", "PASS");
 		} catch (WebDriverException e) {
-			reportStep("The element with xpath: "+xpathVal+" could not be clicked.", "FAIL");
+			reportStep("The element with xpath: "+ele+" could not be clicked.", "FAIL");
 		}
 	}
 
