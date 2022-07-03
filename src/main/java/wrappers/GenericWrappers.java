@@ -8,7 +8,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.*;
 import utils.Reporter;
 
 import java.io.File;
@@ -29,7 +29,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	public String sHubUrl;
 	public String sHubPort;
 	public static String sBrowser;
-
 	public void setDriver(GenericWrappers wrappers) {
 		driverThreadLocal.set(wrappers);
 	}
@@ -113,7 +112,6 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			getDriver().manage().window().maximize();
 			getDriver().manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 			getDriver().get(sUrl);
-
 			//reportStep("The browser:" + browser + " launched successfully", "PASS");
 
 		} catch (Exception e) {
@@ -184,22 +182,18 @@ public class GenericWrappers extends Reporter implements Wrappers {
 	/**
 	 * This method will verify the given text matches in the element text
 	 * @param xpath - The locator of the object in xpath
-	 * @param text  - The text to be verified
+//	 * @param text  - The text to be verified
 	 * @author Baskar
 	 */
-	public void verifyTextByXpath(String xpath, String text){
-
+	public String verifyTextByXpath(String xpath){
+		String sText="";
 		try {
-			String sText = getDriver().findElementByXPath(xpath).getText();
-			if (sText.equalsIgnoreCase(text)){
-				reportStep("The text: "+sText+" matches with the value :"+text, "PASS");
-			}else{
-				reportStep("The text: "+sText+" did not match with the value :"+text, "FAIL");
-			}
+			sText = getDriver().findElementByXPath(xpath).getText();
 		}catch (Exception e) {
 			e.printStackTrace();
 			reportStep("Unknown exception occured while verifying the text", "FAIL");
 		}
+		return sText;
 	}
 
 	/**
@@ -272,6 +266,11 @@ public class GenericWrappers extends Reporter implements Wrappers {
 
 	}
 
+	/**
+	 * This method will click the given element
+	 * @param ele - The webelement
+	 * @author Baskar
+	 */
 	public void clickByEle(WebElement ele) {
 		try{
 			ele.click();
@@ -403,6 +402,19 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			reportStep("The alert could not be found.", "FAIL");
 		} catch (Exception e) {
 			reportStep("The alert could not be accepted.", "FAIL");
+		}
+
+	}
+
+	public void switchToiFrameByXpath(String iFrameXpath) {
+		try {
+			WebDriverWait wait = new WebDriverWait(getDriver(),30);
+			wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.xpath(iFrameXpath)));
+			WebElement iFrame = getDriver().findElementByXPath(iFrameXpath);
+			getDriver().switchTo().frame(iFrame);
+		} catch (Exception e) {
+			e.printStackTrace();
+			reportStep("Some error occured.", "FAIL");
 		}
 
 	}

@@ -4,20 +4,16 @@ import io.cucumber.testng.CucumberOptions;
 import io.cucumber.testng.FeatureWrapper;
 import io.cucumber.testng.PickleWrapper;
 import io.cucumber.testng.TestNGCucumberRunner;
-//import org.junit.runner.RunWith;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-//import cucumber.api.junit.Cucumber;
-import wrappers.LeafTapsWrappers;
-
-//@RunWith(Cucumber.class)
+import wrappers.SkyWrappers;
 
 @CucumberOptions(
 //        tags can be used while debugging/need basis
-        tags = ("@smoke"),
-        features = {"src/main/java/features/IntelliSense.feature"},
+//        tags = ("@Scenario2"),
+        features = {"src/main/java/features"},
                 glue 	  = {"pages"},
         plugin = {
         "summary",
@@ -27,7 +23,7 @@ import wrappers.LeafTapsWrappers;
 },
         monochrome = true)
 
-public class TestNgRunner extends LeafTapsWrappers{
+public class TestNgRunner extends SkyWrappers {
 
     private TestNGCucumberRunner testNGCucumberRunner;
 

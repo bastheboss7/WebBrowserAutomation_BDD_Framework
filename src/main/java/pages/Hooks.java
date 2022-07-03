@@ -3,9 +3,9 @@ package pages;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.Scenario;
-import wrappers.LeafTapsWrappers;
+import wrappers.SkyWrappers;
 
-public class Hooks extends LeafTapsWrappers{
+public class Hooks extends SkyWrappers{
 
 	@Before
 	public void launchBrowser(Scenario sc) {
