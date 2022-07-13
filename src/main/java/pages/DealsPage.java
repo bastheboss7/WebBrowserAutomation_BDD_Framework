@@ -24,7 +24,7 @@ public class DealsPage extends SkyWrappers {
     @FindBy(xpath = "//*[@id=\"price.offer.blt7cf81cc6d337a8fd\"]")
     protected WebElement offerPrice1;
 
-    @FindBy(xpath = "//*[text()='Q Lite - £26 Fibre Broadband & £5 Sky Q']")
+    @FindBy(xpath = "//*[text()='Q Lite - Fibre Broadband & Sky Q']")
     protected WebElement offerName2;
 
     @FindBy(xpath = "//*[@id=\"price.offer.blt400a25464b8ee620\"]")

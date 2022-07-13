@@ -12,7 +12,7 @@ import wrappers.SkyWrappers;
 
 @CucumberOptions(
 //        tags can be used while debugging/need basis
-//        tags = ("@Scenario2"),
+//        tags = ("@Scenario3"),
         features = {"src/main/java/features"},
                 glue 	  = {"pages"},
         plugin = {
@@ -37,7 +37,7 @@ public class TestNgRunner extends SkyWrappers {
         testNGCucumberRunner.runScenario(pickleWrapper.getPickle());
     }
 
-    @DataProvider(name = "scenarios",parallel=false)
+    @DataProvider(name = "scenarios",parallel=true)
     public Object[][] features() {
         return testNGCucumberRunner.provideScenarios();
     }
