@@ -8,22 +8,43 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import wrappers.SkyWrappers;
+import wrappers.BasePageObject;
 
+/**
+ * TestNG runner for Cucumber BDD tests
+ * Enables parallel execution of scenarios using TestNG DataProvider
+ * Integrates Cucumber features with TestNG test framework
+ * 
+ * Report outputs:
+ * - Cucumber HTML: target/reports/cucumber-report/cucumber-pretty/
+ * - Cucumber JSON: target/reports/cucumber-report/CucumberTestReport.json
+ * - Allure: target/allure-results/
+ * 
+ * Tag filtering examples (uncomment to use):
+ * - tags = "@ProhibitedItems"              // Run only prohibited items tests
+ * - tags = "@ParcelShopFilter"             // Run only parcel shop filter tests
+ * - tags = "@Validation"                   // Run all validation tests
+ * - tags = "@Evri"                         // Run all Evri tests
+ * - tags = "@ProhibitedItems or @ParcelShopFilter"  // Run either tag
+ * - tags = "@Evri and @Validation"         // Run tests with both tags
+ * - tags = "not @ParcelShopFilter"         // Exclude parcel shop tests
+ * 
+ * @author Baskar
+ */
 @CucumberOptions(
-//        tags can be used while debugging/need basis
-//        tags = ("@Scenario3"),
+//        tags = "@ParcelShopFilter",  // Uncomment and modify to filter scenarios by tags
         features = {"src/main/java/features"},
-                glue 	  = {"pages"},
+        glue = {"pages"},
         plugin = {
         "summary",
         "pretty" ,
         "html:target/reports/cucumber-report/cucumber-pretty/",
-        "json:target/reports/cucumber-report/CucumberTestReport.json"
+        "json:target/reports/cucumber-report/CucumberTestReport.json",
+        "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"
 },
         monochrome = true)
 
-public class TestNgRunner extends SkyWrappers {
+public class TestNgRunner extends BasePageObject {
 
     private TestNGCucumberRunner testNGCucumberRunner;
 
@@ -37,7 +58,7 @@ public class TestNgRunner extends SkyWrappers {
         testNGCucumberRunner.runScenario(pickleWrapper.getPickle());
     }
 
-    @DataProvider(name = "scenarios",parallel=true)
+    @DataProvider(name = "scenarios", parallel = false)
     public Object[][] features() {
         return testNGCucumberRunner.provideScenarios();
     }
