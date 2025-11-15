@@ -6,26 +6,29 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<aspectj.version>1.9.6</aspectj.version>
-		<allure-cucumber-version>2.13.3</allure-cucumber-version>
-		<poi-version>5.1.0</poi-version>
-		<selenium-version>3.141.0</selenium-version>
-		<testng-version>7.4.0</testng-version>
-		<extent-version>5.0.9</extent-version>
-		<allure-testng-version>2.13.9</allure-testng-version>
-		<common-io-version>2.11.0</common-io-version>
-		<cucumber-testng-version>7.2.3</cucumber-testng-version>
-		<cucumber-java-version>6.6.0</cucumber-java-version>
-		<maven-compiler-plugin-version>3.10.1</maven-compiler-plugin-version>
-		<maven-resource-plugin-version>3.0.2</maven-resource-plugin-version>
-		<maven-surefire-plugin-version>3.0.0-M1</maven-surefire-plugin-version>
-		<maven-cucumber-report-version>5.4.0</maven-cucumber-report-version>
+		<maven.compiler.source>21</maven.compiler.source>
+		<maven.compiler.target>21</maven.compiler.target>
+		<maven.compiler.release>21</maven.compiler.release>
+		<aspectj.version>1.9.25</aspectj.version>
+		<allure-cucumber-version>2.31.0</allure-cucumber-version>
+		<selenium-version>4.38.0</selenium-version>
+		<testng-version>7.11.0</testng-version>
+		<extent-version>5.1.2</extent-version>
+		<allure-testng-version>2.31.0</allure-testng-version>
+		<common-io-version>2.21.0</common-io-version>
+		<cucumber-testng-version>7.31.0</cucumber-testng-version>
+		<cucumber-java-version>7.31.0</cucumber-java-version>
+		<maven-compiler-plugin-version>3.13.0</maven-compiler-plugin-version>
+		<maven-resource-plugin-version>3.3.1</maven-resource-plugin-version>
+		<maven-surefire-plugin-version>3.5.4</maven-surefire-plugin-version>
+		<maven-cucumber-report-version>5.8.2</maven-cucumber-report-version>
+		<webdrivermanager-version>5.9.2</webdrivermanager-version>
 	</properties>
 
 	<dependencies>
 		<dependency>
 			<groupId>io.qameta.allure</groupId>
-			<artifactId>allure-cucumber5-jvm</artifactId>
+			<artifactId>allure-cucumber7-jvm</artifactId>
 			<version>${allure-cucumber-version}</version>
 		</dependency>
 		<dependency>
@@ -40,19 +43,9 @@
 			<version>${selenium-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>${poi-version}</version>
-		</dependency>
-		<!--<dependency>
 			<groupId>com.aventstack</groupId>
 			<artifactId>extentreports</artifactId>
 			<version>${extent-version}</version>
-		</dependency>-->
-		<dependency>
-			<groupId>com.relevantcodes</groupId>
-			<artifactId>extentreports</artifactId>
-			<version>2.41.2</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -75,6 +68,11 @@
 			<version>${testng-version}</version>
 			<scope>compile</scope>
 		</dependency>
+		<dependency>
+			<groupId>io.github.bonigarcia</groupId>
+			<artifactId>webdrivermanager</artifactId>
+			<version>${webdrivermanager-version}</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -83,8 +81,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>${maven-compiler-plugin-version}</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<release>21</release>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -127,12 +124,12 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
-							<projectName>Scan And Go Mobile</projectName>
+							<projectName>Evri Parcel Delivery BDD Tests</projectName>
 							<outputDirectory>target/reports/cucumber-report</outputDirectory>
 							<jsonFiles>
 								<param>**/*.json</param>
 							</jsonFiles>
-							<checkBuildResult>true</checkBuildResult>
+							<checkBuildResult>false</checkBuildResult>
 						</configuration>
 					</execution>
 				</executions>
