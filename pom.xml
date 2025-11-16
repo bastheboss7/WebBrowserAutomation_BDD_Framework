@@ -134,6 +134,30 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>open-extent-report</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>open</executable>
+							<arguments>
+								<argument>${project.build.directory}/reports/extent-report/index.html</argument>
+							</arguments>
+							<successCodes>
+								<successCode>0</successCode>
+								<successCode>1</successCode>
+							</successCodes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<!--<plugin>
 				<groupId>io.qameta.allure</groupId>
 				<artifactId>allure-maven</artifactId>
