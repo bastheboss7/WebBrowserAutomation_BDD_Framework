@@ -1,26 +1,30 @@
 tools:
   jdk:
-    - 8
+    - 21
   maven:
-    - 3.5.0
+    - 3.8.9
 
 triggers:
   - cron:
       spec: 0 17 * * *
       timezone: Europe/London
+
+# Uncomment and update the following if you need environment variables
 #envs:
 #  global:
 #    variables:
-#      CHROME_BIN: /bin/chromium-browser
+#      CHROME_BIN: /usr/bin/google-chrome
 
 flows:
   default:
     try:
-      - mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml
+  - mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml
+  - archiveArtifacts:
+      artifacts: "target/reports/**/*.html, target/reports/**/*.xml, target/reports/**/*.json, target/reports/**/*.png, target/surefire-reports/**/*.xml, target/surefire-reports/**/*.html"
 #      - call: slack-success
     catch:
 #      - call: slack-failure
-      - exit 1
+  - exit 1
 
 #  slack-success:
 #    - exposeVars(results.json)
