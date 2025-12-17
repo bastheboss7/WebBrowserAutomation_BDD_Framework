@@ -1,3 +1,6 @@
 /reports/images/
 /target/
 drivers/
+
+# Jenkins pipeline config
+.jenkins.yml
