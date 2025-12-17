@@ -1,31 +1,18 @@
 pipeline {
     agent any
-    
     tools {
-        jdk '21'
+        // These names MUST match the names you gave in "Manage Jenkins > Tools"
+        jdk '21' 
         maven '3.8.9'
     }
-
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                checkout scm
-            }
-        }
-        
-        stage('Run BDD Tests') {
-            steps {
-                // The 'withMaven' block automatically sets JAVA_HOME and PATH for you
-                withMaven(maven: '3.8.9', jdk: '21') {
-                    sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml'
+                // withMaven will now use the JAVA_HOME set by the tools block
+                withMaven(maven: '3.8.9') {
+                    sh 'mvn clean install'
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            archiveArtifacts artifacts: 'target/reports/**/*.html, target/reports/**/*.xml', allowEmptyArchive: true
         }
     }
 }
