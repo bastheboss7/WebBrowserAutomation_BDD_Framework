@@ -1,18 +1,28 @@
 pipeline {
     agent any
     tools {
-        // These names MUST match the names you gave in "Manage Jenkins > Tools"
         jdk '21' 
-        maven '3.8.9'
+        maven '3.8.9' // Ensure this is defined in Manage Jenkins > Tools
     }
     stages {
-        stage('Build') {
+        stage('Build & Test') {
             steps {
-                // withMaven will now use the JAVA_HOME set by the tools block
+                // withMaven provides better integration for reporting and environment variables
                 withMaven(maven: '3.8.9') {
-                    sh 'mvn clean install'
+                    sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml'
                 }
             }
+        }
+        stage('Archive Reports') {
+            steps {
+                archiveArtifacts artifacts: 'target/reports/**/*, target/surefire-reports/**/*.xml', allowEmptyArchive: true
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }
