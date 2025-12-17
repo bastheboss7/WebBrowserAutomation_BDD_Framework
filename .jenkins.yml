@@ -1,8 +1,6 @@
 tools:
-  jdk:
-    - 21
-  maven:
-    - 3.8.9
+  jdk: 21
+  maven: 3.8.9
 
 triggers:
   - cron:
