@@ -9,7 +9,7 @@ pipeline {
             steps {
                 // withMaven provides better integration for reporting and environment variables
                 withMaven(maven: '3.8.9') {
-                    sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml'
+                    sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true'
                 }
             }
         }
