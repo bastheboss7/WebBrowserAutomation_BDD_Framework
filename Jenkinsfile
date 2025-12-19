@@ -23,13 +23,22 @@ pipeline {
 
     post {
         always {
-            // This saves your Cucumber and Extent reports in Jenkins
+            // 1. Keep the standard archive for downloading
             archiveArtifacts artifacts: 'target/reports/**/*', allowEmptyArchive: true
-            // This displays your TestNG results in a nice graph
+            
+            // 2. The NEW Step: Publish the report as a tab in Jenkins
+            publishHTML([
+                allowMissing: false,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'target/reports/cucumber-report', // Path to your report folder
+                reportFiles: 'index.html',                 // The main HTML file
+                reportName: 'Cucumber HTML Report'         // The name of the tab in Jenkins
+            ])
+
             junit 'target/surefire-reports/*.xml'
         }
         cleanup {
-            // This wipes the workspace to keep the server clean for the next run
             cleanWs()
         }
     }
