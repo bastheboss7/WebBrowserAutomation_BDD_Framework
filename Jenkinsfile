@@ -11,6 +11,7 @@ pipeline {
             steps {
                 // We use 'sh' directly because 'mvn' is inside the markhobson image
                 sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true'
+                chown -R 1000:1000 target/
             }
         }
     }
