@@ -6,15 +6,17 @@ pipeline {
         }
     }
     // NOTICE: No "tools" block here! The image handles it.
-    stages {
-        stage('Build & Test') {
-            steps {
-                // We use 'sh' directly because 'mvn' is inside the markhobson image
-                sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true'
-                chown -R 1000:1000 target/
-            }
-        }
+    stage('Build & Test') {
+    steps {
+        sh '''
+            mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true
+            
+            # THE FIX: Give ownership back to the Jenkins user (ID 1000) 
+            # so Jenkins can archive the artifacts.
+            chown -R 1000:1000 target/
+        '''
     }
+}
     post {
         always {
             archiveArtifacts artifacts: 'target/reports/**/*', allowEmptyArchive: true
