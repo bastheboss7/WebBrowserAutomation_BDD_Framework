@@ -2,54 +2,33 @@ pipeline {
     agent {
         docker {
             image 'markhobson/maven-chrome:jdk-21'
-            // '-u root' ensures permission to create folders and run Chrome
-            // '--entrypoint=' overrides any default image startup logic
-            args '-u root --entrypoint='
+            // '--rm' ensures the container is removed after use
+            // '-u root' prevents permission issues in 'target' folders
+            args '-u root --rm'
         }
     }
-
-    // Parameters allow you to run the same job with different settings
-    parameters {
-        string(name: 'BROWSER', defaultValue: 'chrome', description: 'Browser for testing')
-        string(name: 'ENV', defaultValue: 'PROD', description: 'Environment: TEST, STAGING, or PROD')
-    }
-
     stages {
-        stage('Environment Audit') {
+        stage('Test') {
             steps {
-                // Diagnostic checks to prevent "ghost" failures
-                sh '''
-                    echo "Checking Binaries..."
-                    java -version
-                    mvn -version
-                    google-chrome --version
-                '''
-            }
-        }
-
-        stage('Build & Test') {
-            steps {
-                // Using 'sh' is better than 'withMaven' when using this specific Docker image
-                // as the environment is already pre-configured.
-                sh "mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true -Denv=${params.ENV}"
+                sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true'
             }
         }
     }
-
+    // This post block MUST be at the same level as the agent definition
     post {
         always {
-            // Archive results first before cleaning the workspace
-            archiveArtifacts artifacts: 'target/reports/**/*, target/surefire-reports/**/*.xml', allowEmptyArchive: true
-            junit 'target/surefire-reports/*.xml'
-        }
-        success {
-            echo 'Build Successful! Test reports are available in the Artifacts tab.'
-        }
-        failure {
-            echo 'Build Failed. Check the archived screenshots in target/reports.'
+            // We use the script block to handle errors gracefully
+            script {
+                try {
+                    archiveArtifacts artifacts: 'target/reports/**/*', allowEmptyArchive: true
+                    junit 'target/surefire-reports/*.xml'
+                } catch (Exception e) {
+                    echo "Could not archive artifacts: ${e.message}"
+                }
+            }
         }
         cleanup {
-            // This ensures the Jenkins Agent disk doesn't fill up over time
+            // This is the most stable place for workspace cleanup
             cleanWs()
         }
     }
