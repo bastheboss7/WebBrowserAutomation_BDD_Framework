@@ -31,8 +31,9 @@ pipeline {
                 allowMissing: false,
                 alwaysLinkToLastBuild: true,
                 keepAll: true,
-                reportDir: 'target/reports/cucumber-report', // Path to your report folder
-                reportFiles: 'index.html',                 // The main HTML file
+                reportDir: 'target/reports/cucumber-report/cucumber-html-reports', 
+                // Use the correct filename you found
+                reportFiles: 'overview-features.html',
                 reportName: 'Cucumber HTML Report'         // The name of the tab in Jenkins
             ])
 
