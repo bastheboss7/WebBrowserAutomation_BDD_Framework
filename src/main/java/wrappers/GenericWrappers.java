@@ -151,9 +151,15 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			}
 			
 			// Read browser configurations with system property overrides
-			boolean isHeadless = Boolean.parseBoolean(
-				System.getProperty("headless", localProp.getProperty("Browser.Headless", "false"))
-			);
+			   // Force headless in CI, otherwise use config/system property
+			   boolean isHeadless;
+			   if (System.getenv("CI") != null && System.getenv("CI").equalsIgnoreCase("true")) {
+				   isHeadless = true;
+			   } else {
+				   isHeadless = Boolean.parseBoolean(
+					   System.getProperty("headless", localProp.getProperty("Browser.Headless", "false"))
+				   );
+			   }
 			
 			String windowSizeStr = System.getProperty("windowSize", 
 				localProp.getProperty("Browser.WindowSize", "MAXIMIZED")
@@ -189,10 +195,14 @@ public class GenericWrappers extends Reporter implements Wrappers {
 				case "chrome" -> {
 					ChromeOptions options = new ChromeOptions();
 					
-					// Apply headless mode
-					if (isHeadless) {
-						options.addArguments("--headless=new"); // Modern headless mode
-					}
+					   // Apply headless mode
+					   if (isHeadless) {
+						   options.addArguments("--headless=new"); // Modern headless mode
+					   }
+					   // Add no-sandbox only in CI/CD environments
+					   if (System.getenv("CI") != null && System.getenv("CI").equalsIgnoreCase("true")) {
+						   options.addArguments("--no-sandbox");
+					   }
 					
 					// Apply user agent if provided
 					if (userAgent != null && !userAgent.isEmpty()) {
