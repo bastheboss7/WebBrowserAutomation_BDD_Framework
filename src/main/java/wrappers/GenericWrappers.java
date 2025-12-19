@@ -152,13 +152,12 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			
 			// Read browser configurations with system property overrides
 			   // Force headless in CI, otherwise use config/system property
+			   // Headless mode: Always enabled in CI, locally controlled by config or system property
 			   boolean isHeadless;
 			   if (System.getenv("CI") != null && System.getenv("CI").equalsIgnoreCase("true")) {
-				   isHeadless = true;
+				   isHeadless = true; // Always headless in CI
 			   } else {
-				   isHeadless = Boolean.parseBoolean(
-					   System.getProperty("headless", localProp.getProperty("Browser.Headless", "false"))
-				   );
+				   isHeadless = Boolean.parseBoolean(System.getProperty("headless", localProp.getProperty("Browser.Headless", "false")));
 			   }
 			
 			String windowSizeStr = System.getProperty("windowSize", 
@@ -191,43 +190,47 @@ public class GenericWrappers extends Reporter implements Wrappers {
 				", Window: " + windowSizeStr);
 			
 			// Java 21 enhanced switch expression for browser instantiation
-			driver = switch (browserName.toLowerCase()) {
-				case "chrome" -> {
-					ChromeOptions options = new ChromeOptions();
-					
-					   // Apply headless mode
+			   driver = switch (browserName.toLowerCase()) {
+				   case "chrome" -> {
+					   ChromeOptions options = new ChromeOptions();
+					   boolean isCI = System.getenv("CI") != null && System.getenv("CI").equalsIgnoreCase("true");
 					   if (isHeadless) {
-						   options.addArguments("--headless=new"); // Modern headless mode
+						   options.addArguments("--headless=new");
 					   }
-					   // Add no-sandbox only in CI/CD environments
-					   if (System.getenv("CI") != null && System.getenv("CI").equalsIgnoreCase("true")) {
+					   if (isCI) {
 						   options.addArguments("--no-sandbox");
+						   options.addArguments("--disable-dev-shm-usage");
+						   options.addArguments("--disable-gpu");
 					   }
-					
-					// Apply user agent if provided
-					if (userAgent != null && !userAgent.isEmpty()) {
-						options.addArguments("--user-agent=" + userAgent);
-					}
-					
-					// Apply download directory if provided
-					if (downloadDir != null && !downloadDir.isEmpty()) {
-						options.addArguments("--download.default_directory=" + downloadDir);
-					}
-					
-					// Additional common options for stability
-					options.addArguments("--disable-blink-features=AutomationControlled");
-					options.addArguments("--disable-dev-shm-usage");
-					options.addArguments("--remote-allow-origins=*");
-					options.addArguments("--disable-gpu"); // Disable GPU for stability
-					options.setPageLoadStrategy(PageLoadStrategy.NORMAL); // Ensure proper page load waiting
-					
-					if (isRemote) {
-						yield new RemoteWebDriver(URI.create("http://" + hubUrl + ":" + hubPort + "/wd/hub").toURL(), options);
-					} else {
-						WebDriverManager.chromedriver().setup();
-						yield new ChromeDriver(options);
-					}
-				}
+					   if (userAgent != null && !userAgent.isEmpty()) {
+						   options.addArguments("--user-agent=" + userAgent);
+					   }
+					   if (downloadDir != null && !downloadDir.isEmpty()) {
+						   options.addArguments("--download.default_directory=" + downloadDir);
+					   }
+					   options.addArguments("--disable-blink-features=AutomationControlled");
+					   options.addArguments("--remote-allow-origins=*");
+					   options.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+					   // Print ChromeDriver and Chrome version for diagnostics
+					   try {
+						   String chromePath = WebDriverManager.chromedriver().getDownloadedDriverPath();
+						   System.out.println("[Diagnostics] ChromeDriver path: " + chromePath);
+						   String chromeVersion = WebDriverManager.chromedriver().getDownloadedDriverVersion();
+						   System.out.println("[Diagnostics] ChromeDriver version: " + chromeVersion);
+					   } catch (Exception ignored) {}
+					   try {
+						   if (isRemote) {
+							   yield new RemoteWebDriver(URI.create("http://" + hubUrl + ":" + hubPort + "/wd/hub").toURL(), options);
+						   } else {
+							   WebDriverManager.chromedriver().setup();
+							   yield new ChromeDriver(options);
+						   }
+					   } catch (Exception e) {
+						   System.err.println("[ERROR] Failed to initialize ChromeDriver. This is often caused by missing Chrome, incompatible driver, or insufficient CI resources.");
+						   e.printStackTrace();
+						   throw new RuntimeException("ChromeDriver initialization failed. See above for details.", e);
+					   }
+				   }
 				case "firefox", "mozilla" -> {
 					FirefoxOptions options = new FirefoxOptions();
 					
@@ -292,12 +295,14 @@ public class GenericWrappers extends Reporter implements Wrappers {
 			getDriver().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(pageLoadTimeout));
 			getDriver().manage().timeouts().scriptTimeout(Duration.ofSeconds(scriptTimeout));
 			getDriver().get(url);
-			reportStep("Browser " + browserName + " launched successfully", "PASS");
+			   reportStep("Browser " + browserName + " launched successfully", "PASS");
 
-		} catch (Exception e) {
-			reportStep("Failed to launch browser " + browserName + ": " + e.getMessage(), "FAIL");
-			throw new RuntimeException("Browser launch failed", e);
-		}
+		   } catch (Exception e) {
+			   // Print full stack trace to help debug CI failures
+			   e.printStackTrace();
+			   reportStep("Failed to launch browser " + browserName + ": " + e, "FAIL");
+			   throw new RuntimeException("Browser launch failed", e);
+		   }
 
 		return getDriver();
 	}
