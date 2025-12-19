@@ -1,3 +1,4 @@
+
 # Web Browser Automation BDD Framework
 
 [![Java](https://img.shields.io/badge/Java-21_LTS-orange.svg)](https://openjdk.java.net/)
@@ -10,6 +11,7 @@ A modern, enterprise-grade BDD test automation framework built with Java 21, Sel
 
 ---
 
+
 ## 📋 Table of Contents
 - [Features](#-features)
 - [Prerequisites](#-prerequisites)
@@ -19,9 +21,38 @@ A modern, enterprise-grade BDD test automation framework built with Java 21, Sel
 - [Running Tests](#-running-tests)
 - [Data-Driven Testing](#-data-driven-testing)
 - [Reporting](#-reporting)
-- [CI/CD Integration](#-cicd-integration)
+- [CI/CD Architecture & Jenkins Pipeline](#-cicd-architecture--jenkins-pipeline)
 - [Best Practices](#-best-practices)
 - [Troubleshooting](#-troubleshooting)
+---
+
+## 🏗️ CI/CD Architecture & Jenkins Pipeline
+This framework is built to be "Infrastructure as Code" (IaC) ready and leverages a robust Jenkins pipeline for scalable, reproducible automation.
+
+### 1. The Controller-Agent Model
+Instead of a monolithic installation, the pipeline uses **Dynamic Ephemeral Agents**:
+- **Jenkins Controller:** Orchestrates the workflow and hosts the reporting dashboard.
+- **Docker Agent (`markhobson/maven-chrome`):** A sterile, short-lived container containing the exact JDK 21, Maven, and Chrome versions needed. It is created at the start of the build and destroyed immediately after, ensuring no "environment drift."
+
+### 2. The "Magic Bridge" (DooD)
+To allow the Jenkins container to manage sibling containers, we mount the host's Docker socket:
+
+```bash
+-v /var/run/docker.sock:/var/run/docker.sock
+```
+
+---
+
+## 💻 Setup for Interviewers / Developers
+To run this framework in a sterile Jenkins environment:
+1. **Pull Jenkins:**
+    ```bash
+    docker pull jenkins/jenkins:lts
+    ```
+2. **Launch with Socket:**
+    ```bash
+    docker run -d -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock jenkins/jenkins:lts
+    ```
 
 ---
 
