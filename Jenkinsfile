@@ -1,16 +1,24 @@
 pipeline {
-    agent any
-    tools {
-        jdk '21' 
-        maven '3.8.9' // Ensure this is defined in Manage Jenkins > Tools
+    agent {
+        docker {
+            image 'markhobson/maven-chrome:jdk-21'
+            // This flag is often needed to run Docker-in-Docker or for Chrome permissions
+            args '-u root' 
+        }
     }
     stages {
+        stage('Environment Check') {
+            steps {
+                // Verify that Chrome and Java are actually there
+                sh 'java -version'
+                sh 'mvn -version'
+                sh 'google-chrome --version'
+            }
+        }
         stage('Build & Test') {
             steps {
-                // withMaven provides better integration for reporting and environment variables
-                withMaven(maven: '3.8.9') {
-                    sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true'
-                }
+                // We use 'sh' directly because Maven is already in the Docker image
+                sh 'mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true'
             }
         }
         stage('Archive Reports') {
