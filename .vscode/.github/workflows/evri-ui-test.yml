@@ -1,0 +1,56 @@
+name: BDD Test Automation
+
+on:
+  # 1. Manual Trigger (The Button)
+  workflow_dispatch:
+    inputs:
+      BROWSER:
+        description: 'Pick a browser'
+        required: true
+        default: 'chrome'
+        type: choice
+        options: [chrome, firefox, edge]
+      ENVIRONMENT:
+        description: 'Target Environment'
+        required: true
+        default: 'QA'
+        type: choice
+        options: [QA, UAT, PROD]
+      TAGS:
+        description: 'Cucumber tags'
+        required: true
+        default: '@ParcelDelivery'
+        type: choice
+        options: ['@ParcelDelivery', '@ProhibitedItems', '@ParcelShopFilter']
+
+  # 2. Scheduled Trigger (The Timer)
+  schedule:
+    # This runs every day at 2:00 AM UTC
+    # Format: 'Minute Hour Day Month DayOfWeek'
+    - cron: '0 2 * * *'
+
+jobs:
+  automation-suite:
+    runs-on: ubuntu-latest
+    container:
+      image: markhobson/maven-chrome:jdk-21
+      options: --user root
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Maven Tests
+        run: |
+          # Use logic to handle parameters OR defaults for scheduled runs
+          mvn clean verify \
+          -Dbrowser=${{ github.event.inputs.BROWSER || 'chrome' }} \
+          -Denv=${{ github.event.inputs.ENVIRONMENT || 'QA' }} \
+          -Dcucumber.filter.tags="${{ github.event.inputs.TAGS || '@ParcelDelivery' }}"
+          
+      - name: Archive Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nightly-Cucumber-Reports
+          path: target/reports/
