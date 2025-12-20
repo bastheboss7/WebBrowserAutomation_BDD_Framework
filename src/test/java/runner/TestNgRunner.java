@@ -34,7 +34,7 @@ import wrappers.BasePageObject;
 @CucumberOptions(
 //        tags = "@ParcelShopFilter",  // Uncomment and modify to filter scenarios by tags
         features = {"src/main/java/features"},
-        glue = {"pages"},
+        glue = {"pages", "runner", "models", "utils", "wrappers"},
         plugin = {
         "summary",
         "pretty" ,
