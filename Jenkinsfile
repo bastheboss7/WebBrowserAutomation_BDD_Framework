@@ -7,16 +7,25 @@ pipeline {
         }
     }
 
+    // This creates the dropdowns in the Jenkins UI
+    parameters {
+        choice(name: 'BROWSER', choices: ['chrome', 'firefox', 'edge'], description: 'Pick a browser')
+        choice(name: 'ENVIRONMENT', choices: ['QA', 'UAT', 'PROD'], description: 'Target Environment')
+        choice(name: 'TAGS', choices: ['@ParcelDelivery', '@ProhibitedItems', '@ParcelShopFilter'], description: 'Cucumber tags to run')
+    }
+
     stages {
         stage('Build & Test') {
             steps {
-                sh '''
-                    mvn clean verify -Dsurefire.suiteXmlFiles=testngParallel.xml -Dheadless=true
+                sh """
+                    mvn clean verify \
+                    -Dbrowser=${params.BROWSER} \
+                    -Denv=${params.ENVIRONMENT} \
+                    -Dcucumber.filter.tags="${params.TAGS}"
                     
-                    # THE FIX: This transfers file ownership from the 'root' user 
-                    # back to the 'jenkins' user so the artifacts can be saved.
+                    # Ownership fix
                     chown -R 1000:1000 target/
-                '''
+                """
             }
         }
     }
