@@ -1,7 +1,6 @@
 name: BDD Test Automation
 
 on:
-  # 1. Manual Trigger (The Button)
   workflow_dispatch:
     inputs:
       BROWSER:
@@ -23,11 +22,12 @@ on:
         type: choice
         options: ['@ParcelDelivery', '@ProhibitedItems', '@ParcelShopFilter']
 
-  # 2. Scheduled Trigger (The Timer)
   schedule:
-    # This runs every day at 2:00 AM UTC
-    # Format: 'Minute Hour Day Month DayOfWeek'
     - cron: '0 2 * * *'
+
+# Recommended: This confirms the write-access needed for GitHub Pages
+permissions:
+  contents: write
 
 jobs:
   automation-suite:
@@ -42,15 +42,28 @@ jobs:
 
       - name: Run Maven Tests
         run: |
-          # Use logic to handle parameters OR defaults for scheduled runs
           mvn clean verify \
           -Dbrowser=${{ github.event.inputs.BROWSER || 'chrome' }} \
-          -Denv=${{ github.event.inputs.ENVIRONMENT || 'QA' }} \
+          -Denv=${{ github.event.inputs.ENVIRONMENT || 'PROD' }} \
           -Dcucumber.filter.tags="${{ github.event.inputs.TAGS || '@ParcelDelivery' }}"
           
-      - name: Archive Reports
+      - name: Archive Reports (Backup)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Nightly-Cucumber-Reports
+          name: Reports
           path: target/reports/
+
+      - name: Prepare Report for Deployment
+        if: always()
+        run: |
+          mkdir -p public
+          cp -r target/reports/cucumber-report/cucumber-html-reports/* public/
+          cp public/overview-features.html public/index.html
+
+      - name: Deploy to Live Website
+        if: always()
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: public
+          branch: gh-pages
