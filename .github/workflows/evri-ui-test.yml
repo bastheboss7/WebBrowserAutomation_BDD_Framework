@@ -22,16 +22,15 @@ on:
         type: choice
         options: ['@ParcelDelivery', '@ProhibitedItems', '@ParcelShopFilter']
 
-  schedule:
-    - cron: '0 2 * * *'
-
-# Recommended: This confirms the write-access needed for GitHub Pages
+         schedule:
+            - cron: '0 2 * * *'
 permissions:
   contents: write
 
 jobs:
   automation-suite:
     runs-on: ubuntu-latest
+    # We keep the container for the TESTS only
     container:
       image: markhobson/maven-chrome:jdk-21
       options: --user root
@@ -46,23 +45,35 @@ jobs:
           -Dbrowser=${{ github.event.inputs.BROWSER || 'chrome' }} \
           -Denv=${{ github.event.inputs.ENVIRONMENT || 'PROD' }} \
           -Dcucumber.filter.tags="${{ github.event.inputs.TAGS || '@ParcelDelivery' }}"
-          
-      - name: Archive Reports (Backup)
+
+      # We save the report so the NEXT job can see it
+      - name: Upload Report Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: Reports
-          path: target/reports/
+          name: cucumber-report-files
+          path: target/reports/cucumber-report/cucumber-html-reports/
 
-      - name: Prepare Report for Deployment
-        if: always()
+  deploy-report:
+    # This job runs AFTER the tests and on the host (not inside the Docker)
+    needs: automation-suite
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Report Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cucumber-report-files
+          path: public
+
+      - name: Prepare index.html
         run: |
-          mkdir -p public
-          cp -r target/reports/cucumber-report/cucumber-html-reports/* public/
           cp public/overview-features.html public/index.html
 
       - name: Deploy to Live Website
-        if: always()
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: public
