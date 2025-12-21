@@ -12,7 +12,7 @@ on:
       ENVIRONMENT:
         description: 'Target Environment'
         required: true
-        default: 'QA'
+        default: 'PROD'
         type: choice
         options: [QA, UAT, PROD]
       TAGS:
@@ -22,15 +22,16 @@ on:
         type: choice
         options: ['@ParcelDelivery', '@ProhibitedItems', '@ParcelShopFilter']
 
-         schedule:
-            - cron: '0 2 * * *'
+  # FIXED: schedule must align with workflow_dispatch
+  schedule:
+    - cron: '0 2 * * *'
+
 permissions:
   contents: write
 
 jobs:
   automation-suite:
     runs-on: ubuntu-latest
-    # We keep the container for the TESTS only
     container:
       image: markhobson/maven-chrome:jdk-21
       options: --user root
@@ -46,7 +47,6 @@ jobs:
           -Denv=${{ github.event.inputs.ENVIRONMENT || 'PROD' }} \
           -Dcucumber.filter.tags="${{ github.event.inputs.TAGS || '@ParcelDelivery' }}"
 
-      # We save the report so the NEXT job can see it
       - name: Upload Report Artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -55,7 +55,6 @@ jobs:
           path: target/reports/cucumber-report/cucumber-html-reports/
 
   deploy-report:
-    # This job runs AFTER the tests and on the host (not inside the Docker)
     needs: automation-suite
     if: always()
     runs-on: ubuntu-latest
