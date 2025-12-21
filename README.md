@@ -1,3 +1,4 @@
+[![BDD Test Automation](https://github.com/bastheboss7/WebBrowserAutomation_BDD_Framework/actions/workflows/evri-ui-test.yml/badge.svg)](https://github.com/bastheboss7/WebBrowserAutomation_BDD_Framework/actions/workflows/evri-ui-test.yml)
 
 # Web Browser Automation BDD Framework
 
