@@ -1,5 +1,9 @@
 [![BDD Test Automation](https://github.com/bastheboss7/WebBrowserAutomation_BDD_Framework/actions/workflows/evri-ui-test.yml/badge.svg)](https://bastheboss7.github.io/WebBrowserAutomation_BDD_Framework/)
 
+## 🚀 Live Test Report
+You can view the latest execution results and historical trends on our live dashboard:
+👉 **[View Cucumber HTML Report](https://bastheboss7.github.io/WebBrowserAutomation_BDD_Framework/)**
+
 # Web Browser Automation BDD Framework
 
 [![Java](https://img.shields.io/badge/Java-21_LTS-orange.svg)](https://openjdk.java.net/)
