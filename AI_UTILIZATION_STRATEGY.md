@@ -174,6 +174,34 @@ Every Copilot-generated suggestion underwent rigorous review for:
 - Clear step definition naming
 - Scenario independence and reusability
 
+**AI Code Review Prompt for Enterprise Automation**:
+
+Role: You are a Senior Lead Test Automation Architect specializing in Appium, Java, and BDD.
+
+Task: Conduct a strict architectural review of the provided code snippets. Evaluate the code against Enterprise-Grade Automation Standards.
+
+Checklist for Review:
+
+Separation of Concerns: Are Step Definitions separated from Page Objects? Are locators externalized?
+Thread Safety: Is the code safe for parallel execution? (Look for ThreadLocal, synchronized keywords, or static leaks).
+Object Lifecycle: Is the framework using a Manager or Factory pattern, or is it creating unnecessary "new" instances?
+Wait Strategy: Is there a mix of Implicit and Explicit waits? Are waits handled in a BasePage or hardcoded?
+Clean Code: Are methods following the Single Responsibility Principle? Is there logic in Step Definitions that should be in Page Objects?
+Error Handling: Are there try-catch blocks with meaningful logging and reporting?
+Output Format:
+
+Architectural Score: (0-10)
+Major Violations: (Critical issues that break scalability/parallelism)
+Minor Improvements: (Clean code and maintenance suggestions)
+Refactored Code: (Provide the corrected version of the code)
+Code to Review: > [INSERT YOUR CODE HERE]
+Why this prompt is effective
+
+Constraint-Based: By listing "Thread Safety" and "Wait Strategy," you force the AI to look for the specific "sins" we discussed earlier (like mixing waits or static driver leaks).
+Actionable Output: It doesn't just say "this is bad"; it asks for a Refactored Version, which teaches you the correct pattern immediately.
+Scoring: The "Architectural Score" gives you a quick benchmark for your team's code quality.
+
+
 #### 4. Integration Testing
 All refactored code was validated through comprehensive testing:
 

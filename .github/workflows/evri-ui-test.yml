@@ -45,7 +45,7 @@ jobs:
           mvn clean verify \
           -Dbrowser=${{ github.event.inputs.BROWSER || 'chrome' }} \
           -Denv=${{ github.event.inputs.ENVIRONMENT || 'PROD' }} \
-          -Dcucumber.filter.tags="${{ github.event.inputs.TAGS || '@ParcelDelivery' }}"
+          -Dcucumber.filter.tags="${{ github.event.inputs.TAGS || '@ParcelShopFilter' }}"
 
       - name: Upload Report Artifact
         if: always()
