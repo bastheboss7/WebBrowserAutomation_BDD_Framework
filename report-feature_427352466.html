@@ -76,7 +76,7 @@ $(document).ready(function() {
     <tr class="info">
       <td>Evri Parcel Delivery BDD Tests</td>
         <td>1</td>
-      <td>04 Mar 2026, 03:57</td>
+      <td>05 Mar 2026, 04:01</td>
     </tr>
   </tbody>
 </table>
@@ -129,19 +129,19 @@ $(document).ready(function() {
         <tbody>
         <tr>
           <td class="tagname">Parcel Delivery and Shop Finder</td>
-          <td      class="passed"    >5</td>
-          <td >0</td>
-          <td >0</td>
+          <td      class="passed"    >2</td>
+          <td      class="failed"    >1</td>
+          <td     class="skipped"   >2</td>
           <td >0</td>
           <td >0</td>
           <td class="total">5</td>
 
-          <td  class="passed"    >1</td>
           <td >0</td>
+          <td  class="failed"    >1</td>
           <td class="total">1</td>
 
-          <td class="duration" data-value="5933240941">5.933</td>
-          <td class="passed">Passed</td>
+          <td class="duration" data-value="93354882565">1:33.354</td>
+          <td class="failed">Failed</td>
         </tr>
         </tbody>
 
@@ -176,7 +176,7 @@ $(document).ready(function() {
 </div>
 
 
-<div class="brief passed">
+<div class="brief failed">
   <span class="keyword indention">Feature</span>
   <span class="name">Parcel Delivery and Shop Finder</span>
 
@@ -196,7 +196,7 @@ $(document).ready(function() {
 </div>
 
 
-  <span class="lead-duration duration">1.161</span>
+  <span class="lead-duration duration">1.494</span>
 
 
   <span data-toggle="collapse" class=" collapsed  collapsable-control" data-target="#element-1">
@@ -239,7 +239,7 @@ $(document).ready(function() {
   <span class="keyword indention">Given</span>
   <span class="name">I am on the evri.com homepage</span>
 
-  <span class="lead-duration duration">1.161</span>
+  <span class="lead-duration duration">1.494</span>
 
 </div>
 
@@ -282,12 +282,12 @@ $(document).ready(function() {
 </div>
 
 
-  <span class="lead-duration duration">4.771</span>
+  <span class="lead-duration duration">1:31.860</span>
 
 
-  <span data-toggle="collapse" class=" collapsed  collapsable-control" data-target="#element-3">
+  <span data-toggle="collapse" class=" collapsable-control" data-target="#element-3">
 
-<div class="brief passed">
+<div class="brief failed">
   <span class="keyword indention">Scenario</span>
   <span class="name">User can filter ParcelShops by location</span>
 
@@ -298,7 +298,7 @@ $(document).ready(function() {
   </span>
   <div class="description indention"></div>
 
-  <div id="element-3" class="collapse collapsable-details ">
+  <div id="element-3" class="collapse collapsable-details  in ">
 
 
   <div class="inner-level hooks-element-before">
@@ -320,7 +320,7 @@ $(document).ready(function() {
             <span class="keyword indention">Before</span>
               <span class="location name">pages.Hooks.launchBrowser(io.cucumber.java.Scenario)</span>
 
-  <span class="lead-duration duration">3.462</span>
+  <span class="lead-duration duration">3.498</span>
 
           </div>
 
@@ -337,9 +337,9 @@ $(document).ready(function() {
 
 
 <div class="steps inner-level">
-  <div data-toggle="collapse" class=" collapsed  collapsable-control" data-target="#steps-5">
+  <div data-toggle="collapse" class=" collapsable-control" data-target="#steps-5">
 
-<div class="brief passed">
+<div class="brief failed">
   <span class="keyword indention">Steps</span>
   <span class="name"></span>
 
@@ -349,7 +349,7 @@ $(document).ready(function() {
 
   </div>
 
-  <div id="steps-5" class="inner-level collapse collapsable-details ">
+  <div id="steps-5" class="inner-level collapse collapsable-details  in ">
       <div class="step">
 
 
@@ -357,7 +357,7 @@ $(document).ready(function() {
   <span class="keyword indention">When</span>
   <span class="name">I select the <span class="argument">&quot;Find a ParcelShop&quot;</span> link from the <span class="argument">&quot;ParcelShops&quot;</span> menu</span>
 
-  <span class="lead-duration duration">1.980</span>
+  <span class="lead-duration duration">1.550</span>
 
 </div>
 
@@ -380,11 +380,11 @@ $(document).ready(function() {
       <div class="step">
 
 
-<div class="brief step-name-And passed">
+<div class="brief step-name-And failed">
   <span class="keyword indention">And</span>
   <span class="name">I search for ParcelShops in <span class="argument">&quot;Edinburgh&quot;</span></span>
 
-  <span class="lead-duration duration">1.245</span>
+  <span class="lead-duration duration">1:30.309</span>
 
 </div>
 
@@ -392,6 +392,21 @@ $(document).ready(function() {
 
 
 
+
+  <div class="inner-level">
+    <div class="message indention">
+      <div data-toggle="collapse" class=" collapsable-control" data-target="#msg-6">
+          <a>java.lang.RuntimeException:</a>
+      </div>
+      <div id="msg-6" class="collapse collapsable-details  in ">
+        <pre>java.lang.RuntimeException: FAILED
+	at utils.Reporter.reportStep(Reporter.java:88)
+	at pages.EvriParcelShopFinderPage.iSearchForParcelShopsIn(EvriParcelShopFinderPage.java:80)
+	at ✽.I search for ParcelShops in &quot;Edinburgh&quot;(file:///__w/bdd-java21-selenium-cucumber-testng/bdd-java21-selenium-cucumber-testng/src/main/java/features/evriProhibitedItem.feature:24)
+</pre>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -407,11 +422,11 @@ $(document).ready(function() {
       <div class="step">
 
 
-<div class="brief step-name-And passed">
+<div class="brief step-name-And skipped">
   <span class="keyword indention">And</span>
   <span class="name">I select <span class="argument">&quot;ParcelShops&quot;</span> from the filters</span>
 
-  <span class="lead-duration duration">0.435</span>
+  <span class="lead-duration duration">0.000</span>
 
 </div>
 
@@ -434,11 +449,11 @@ $(document).ready(function() {
       <div class="step">
 
 
-<div class="brief step-name-Then passed">
+<div class="brief step-name-Then skipped">
   <span class="keyword indention">Then</span>
   <span class="name">I should see only ParcelShops with postcodes starting with <span class="argument">&quot;EH&quot;</span> in the list</span>
 
-  <span class="lead-duration duration">1.110</span>
+  <span class="lead-duration duration">0.000</span>
 
 </div>
 
@@ -465,7 +480,7 @@ $(document).ready(function() {
 
 
   <div class="inner-level hooks-element-after">
-    <div data-toggle="collapse" class=" collapsed  collapsable-control" data-target="#after-6">
+    <div data-toggle="collapse" class=" collapsed  collapsable-control" data-target="#after-7">
 
 <div class="brief passed">
   <span class="keyword indention">Hooks</span>
@@ -477,13 +492,13 @@ $(document).ready(function() {
 
     </div>
 
-    <div id="after-6" class="inner-level collapse collapsable-details ">
+    <div id="after-7" class="inner-level collapse collapsable-details ">
         <div class="hook">
           <div class="brief passed">
             <span class="keyword indention">After</span>
               <span class="location name">pages.Hooks.executeAfterScenario(io.cucumber.java.Scenario)</span>
 
-  <span class="lead-duration duration">0.100</span>
+  <span class="lead-duration duration">0.184</span>
 
           </div>
 
@@ -492,6 +507,21 @@ $(document).ready(function() {
 
 
 
+  <div class="embeddings inner-level">
+  <div class="embedding indention">
+    <div data-toggle="collapse" data-target="#embedding-8" class="collapsable-control">
+      <a>User can filter ParcelShops by location</a>
+      <a href="embeddings/embedding_605233862.png" download target="_blank">
+        <span class="download-button glyphicon glyphicon-download-alt"></span>
+      </a>
+    </div>
+    <div id="embedding-8" class="collapse collapsable-details ">
+      <div class="embedding-content">
+        <img src="embeddings/embedding_605233862.png">
+      </div>
+    </div>
+  </div>
+  </div>
 
         </div>
     </div>
