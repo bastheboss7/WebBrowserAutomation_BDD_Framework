@@ -1,15 +1,78 @@
-name: Evri UI Tests
+name: BDD Test Automation
 
 on:
   workflow_dispatch:
+    inputs:
+      BROWSER:
+        description: 'Pick a browser'
+        required: true
+        default: 'chrome'
+        type: choice
+        options: [chrome, firefox, edge]
+      ENVIRONMENT:
+        description: 'Target Environment'
+        required: true
+        default: 'PROD'
+        type: choice
+        options: [QA, UAT, PROD]
+      TAGS:
+        description: 'Cucumber tags'
+        required: true
+        default: '@ParcelDelivery'
+        type: choice
+        options: ['@ParcelDelivery', '@ProhibitedItems', '@ParcelShopFilter']
+
+  # schedule:
+  #   - cron: '0 2 * * *'
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  automation-suite:
     runs-on: ubuntu-latest
+    container:
+      image: markhobson/maven-chrome:jdk-21
+      options: --user root
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v4
 
-    - name: Run Tests
-      run: mvn test
+      - name: Run Maven Tests
+        run: |
+          mvn clean verify \
+          -Dbrowser=${{ github.event.inputs.BROWSER || 'chrome' }} \
+          -Denv=${{ github.event.inputs.ENVIRONMENT || 'PROD' }} \
+          -Dcucumber.filter.tags="${{ github.event.inputs.TAGS || '@ParcelShopFilter' }}"
+
+      - name: Upload Report Artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-report-files
+          path: target/reports/cucumber-report/cucumber-html-reports/
+
+  deploy-report:
+    needs: automation-suite
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Download Report Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cucumber-report-files
+          path: public
+
+      - name: Prepare index.html
+        run: |
+          cp public/overview-features.html public/index.html
+
+      - name: Deploy to Live Website
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: public
+          branch: gh-pages
